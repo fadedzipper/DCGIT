@@ -38,6 +38,9 @@ class ReportViewSet(viewsets.ModelViewSet):
         if self.action == 'create':
             return serializers.ReportAddSerializer
 
+        if self.action == 'update':
+            return serializers.ReportUpdateSerializer
+
         return serializers.ReportSerializer
 
 

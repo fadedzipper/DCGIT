@@ -10,5 +10,6 @@ class Report(models.Model):
     email = models.CharField(max_length=30)
     handled = models.IntegerField(default=0)
     info = models.CharField(max_length=500)
+    handle_content = models.CharField(null=True, default="", max_length=500)
 
 
