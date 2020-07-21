@@ -1,6 +1,6 @@
 from django.db import models
 from user.models import User
-
+from grid.models import Grid
 # Create your models here.
 
 
@@ -24,6 +24,7 @@ class Device(models.Model):
     x_index = models.CharField(default="",null=True,verbose_name="位置",max_length=50)
     y_index = models.CharField(default="",null=True,verbose_name="位置",max_length=50)
     is_bind = models.BooleanField(default=False,null=True,verbose_name="设备是否绑定到网格")
+    grid = models.ForeignKey(Grid, null=True, blank=True, on_delete=models.SET_NULL)
     # ...
 
 

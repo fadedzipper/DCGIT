@@ -7,12 +7,11 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class UserSerializer(serializers.ModelSerializer):
 
     date_joined = serializers.DateTimeField(format("%Y-%m-%d %H:%M:%S"),input_formats=["%Y-%m-%d %H:%M:%S", ],read_only=True)
-    birth = serializers.DateTimeField(format("%Y-%m-%d"),input_formats=["%Y-%m-%d", ])
 
     class Meta:
         model = models.User
         fields = ['id','name','num','username','email','phone','gender',\
-                'info','last_login','is_active','date_joined','password', 'birth']
+                'info','last_login','is_active','date_joined','password']
 
         extra_kwargs = {
             'last_login':{'read_only':True,"required":False},
@@ -59,7 +58,7 @@ class UserUpdateSerializer(UserSerializer):
     class Meta:
         model = models.User
         fields = ['id','name','num','username','email','phone','gender', \
-                  'info','is_active', 'birth']
+                  'info','is_active']
 
 
 

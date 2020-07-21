@@ -20,7 +20,7 @@ class GroupListView(generics.ListCreateAPIView):
 
     def get_model_perms_conf(self):
         if self.request.method == "POST":
-            return ('user.group_management',)
+            return ('user.add_user',)
         else:
             return ()
 

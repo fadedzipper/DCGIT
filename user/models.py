@@ -24,7 +24,6 @@ class User(AbstractUser):
     num = models.CharField(max_length=20)
     gender = models.IntegerField(default=1)
     info = models.CharField(max_length=100)
-    birth = models.DateTimeField(max_length=6)
     name = models.CharField(max_length=50)
 
     class Meta:
@@ -35,4 +34,4 @@ class User(AbstractUser):
 
 
     def __str__(self):
-        return "[" +self.username +"]"
+        return str(self.username)

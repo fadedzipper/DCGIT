@@ -99,12 +99,94 @@ class  DeviceConfSerialzer(serializers.ModelSerializer):
         return  object
 
 
+class DevicelistallSerializer(serializers.ModelSerializer):
+
+    grid = serializers.StringRelatedField(many=False)
+    class Meta:
+        model = models.Device
+        fields = ['id','mac', \
+                  'x_index', 'y_index', 'info', 'grid', 'register_time', \
+                  'active_time', 'last_login_time', 'last_logout_time', 'grid']
+
+
+        # def get_obj(self, obj):
+        #     if obj.is_active == 0:
+        #         return "离线"
+        #     return "在线"
+
+class DeviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Device
+        fields = ['id', 'serial', 'name', 'is_register', 'is_online', 'is_bind', 'is_enable']
 
 
 
 
+class DeviceUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Device
+        fields = ['id', 'name', 'x_index', 'y_index', 'info']
 
 
+class Device_enableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Device
+        fields = ['id', 'is_enable']
+        extra_kwargs = {
+            'is_enable' : {'read_only', True}
+        }
+    def update(self, instance, validated_data):
+        object = super().update(instance, validated_data)
+        object.is_enable = True
+        object.save()
+        return object
 
 
+class Device_unableSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Device
+        fields = ['id', 'is_enable']
+        extra_kwargs = {
+            'is_enable' : {'read_only', True}
+        }
+    def update(self, instance, validated_data):
+        object = super().update(instance, validated_data)
+        object.is_enable = False
+        object.save()
+        return object
 
+
+class Device_bindSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Device
+        fields = ['id', 'is_bind', 'grid']
+
+        extra_kwargs = {
+            'is_bind' : {'read_only', True}
+        }
+    def update(self, instance, validated_data):
+        object = super().update(instance, validated_data)
+        object.is_bind = True
+        object.grid = validated_data['grid']
+        object.save()
+        return object
+
+
+class Device_disbindSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Device
+        fields = ['id', 'is_bind', 'grid']
+
+        extra_kwargs = {
+            'is_bind' : {'read_only', True}
+        }
+
+    def update(self, instance, validated_data):
+        object = super().update(instance, validated_data)
+        object.is_bind = False
+        object.grid = validated_data['grid']
+        object.save()
+        return object
