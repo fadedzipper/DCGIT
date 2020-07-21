@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'user',
     'group',
     'permission',
-    'device'
+    'device',
+    'report'
 
 ]
 
@@ -93,27 +94,27 @@ WSGI_APPLICATION = 'drfdemo02.wsgi.application'
 # }
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'Books',
-#         'USER':'root',
-#         'PASSWORD':'LI8023FEI',
-#         "POST":'3306',
-#         "HOST":'47.104.190.205'
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dcs3',
-        'USER': 'root',
-        'HOST': '47.104.190.205',
-        'PASSWORD': 'LI8023FEI',
-        'PORT': '3306',
+        'NAME': 'dcs03',
+        'USER':'root',
+        'PASSWORD':'root',
+        "POST":'3306',
+        "HOST":'127.0.0.1'
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dcs3',
+#         'USER': 'root',
+#         'HOST': '47.104.190.205',
+#         'PASSWORD': 'LI8023FEI',
+#         'PORT': '3306',
+#     }
+# }
 
 
 # Password validation
@@ -226,5 +227,5 @@ SIMPLE_JWT = {
 }
 
 
-HOST = '192.168.1.133'
+HOST = '127.0.0.1'
 PORT = 20001

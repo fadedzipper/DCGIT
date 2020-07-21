@@ -8,14 +8,14 @@ from user.models import User
 class Device(models.Model):
     # 硬件信息
 
-    mac = models.CharField(default='',max_length=100,verbose_name="设备mac地址",unique=True)
+    mac = models.CharField(default='',max_length=100,verbose_name="设备mac地址")
     serial = models.CharField(default='',max_length=100,verbose_name='设备序列号',unique=True)
     is_register = models.BooleanField(default=False,verbose_name="是否激活（是否由前端激活）")
     is_enable = models.BooleanField(default=False,verbose_name="可用状态（故障）")
     is_online = models.BooleanField(default=False,verbose_name="在线状态（心跳包监控在线状态）")
     register_time = models.DateTimeField(auto_now_add=True,verbose_name="设备注册时间")
     active_time = models.DateTimeField(auto_now_add=True, verbose_name="设备激活时间",null=True)
-    last_login_time = models.DateTimeField(auto_now_add=True,verbose_name="设备最后上线时间",null=True)
+    last_login_time = models.DateTimeField(auto_now_add=True,verbose_name="设备最上线时间",null=True)
     last_logout_time = models.DateTimeField(auto_now_add=True,verbose_name="设备最后下线时间",null=True)
 
     # 设备描述
@@ -102,7 +102,7 @@ class AlarmData(models.Model):
     value = models.CharField(default="",max_length=100,verbose_name="报警值")
     time = models.DateTimeField(auto_now_add=True,verbose_name="报警时间")
     status = models.BooleanField(default=False,verbose_name="处理状态（已处理/未处理）")
-    dealwith_time = models.DateTimeField(auto_now_add=True,verbose_name="处理时间")
+    dealwith_time = models.DateTimeField(null=True,default=None,verbose_name="处理时间")
     user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,default=None,verbose_name="处理人")
 
 
