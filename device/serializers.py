@@ -117,17 +117,6 @@ class DeviceUpdateSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'x_index', 'y_index', 'info', 'is_enable', 'is_bind', 'grid']
 
 
-class Device_enableSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Device
-        fields = ['id', 'is_enable']
-        read_only_fields = ['is_enable']
-    def update(self, instance, validated_data):
-        object = super().update(instance, validated_data)
-        object.is_enable = 1
-        object.save()
-        return object
-
 
 class Device_unableSerializer(serializers.ModelSerializer):
     class Meta:
@@ -141,32 +130,24 @@ class Device_unableSerializer(serializers.ModelSerializer):
         return object
 
 
-class Device_bindSerializer(serializers.ModelSerializer):
-
+class DeviceconflistSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Device
-        fields = ['id', 'is_bind', 'grid']
-
-        read_only_fields = ['is_bind']
-    def update(self, instance, validated_data):
-        object = super().update(instance, validated_data)
-        object.is_bind = True
-        object.grid = validated_data['grid']
-        object.save()
-        return object
+        model = models.DeviceConf
+        fields = '__all__'
 
 
-class Device_disbindSerializer(serializers.ModelSerializer):
-
+class DevicealarmlistSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Device
-        fields = ['id', 'is_bind', 'grid']
+        model = models.AlarmData
+        fields = '__all__'
 
-        read_only_fields = ['is_bind']
+class DevicerealdatalistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceData
+        fields = '__all__'
 
-    def update(self, instance, validated_data):
-        object = super().update(instance, validated_data)
-        object.is_bind = False
-        object.grid = None
-        object.save()
-        return object
+class DevicehistorydatalistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceHistoryData
+        fields = '__all__'
+

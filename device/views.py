@@ -174,3 +174,43 @@ class DeviceupdateView(generics.UpdateAPIView):
         id = self.kwargs['pk']
         object = get_object_or_404(models.Device, id = id)
         return object
+
+
+class DeviceConflistView(generics.ListAPIView):
+
+    pagination_class = MyPagination
+    queryset = models.DeviceConf.objects.all().order_by('id')
+    serializer_class = serializers.DeviceconflistSerializer
+    filter_backends = (DjangoFilterBackend,filters.SearchFilter)
+    # filterset_fields = ('gender', 'is_active')
+    # search_fields = ('serial', 'name')
+
+
+class DeviceAlarmdatalistView(generics.ListAPIView):
+
+    pagination_class = MyPagination
+    queryset = models.AlarmData.objects.all().order_by('id')
+    serializer_class = serializers.DevicealarmlistSerializer
+    filter_backends = (DjangoFilterBackend,filters.SearchFilter)
+    # filterset_fields = ('gender', 'is_active')
+    # search_fields = ('serial', 'name')
+
+
+class DeviceRealdatalistView(generics.ListAPIView):
+
+    pagination_class = MyPagination
+    queryset = models.DeviceData.objects.all().order_by('id')
+    serializer_class = serializers.DevicerealdatalistSerializer
+    filter_backends = (DjangoFilterBackend,filters.SearchFilter)
+    # filterset_fields = ('gender', 'is_active')
+    # search_fields = ('serial', 'name')
+
+
+class DeviceHistorydatalistView(generics.ListAPIView):
+
+    pagination_class = MyPagination
+    queryset = models.DeviceHistoryData.objects.all().order_by('id')
+    serializer_class = serializers.DevicehistorydatalistSerializer
+    filter_backends = (DjangoFilterBackend,filters.SearchFilter)
+    # filterset_fields = ('gender', 'is_active')
+    # search_fields = ('serial', 'name')

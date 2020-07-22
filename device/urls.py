@@ -6,4 +6,8 @@ urlpatterns = [
     path('<int:pk>/unable',views.DeviceUnableView.as_view()),
     path('<int:pk>/update',views.DeviceupdateView.as_view()),
     path('list',views.DevicelistView.as_view()),
+    path('configure', views.DeviceConflistView.as_view()),
+    path('realdata', views.DeviceRealdatalistView.as_view()),
+    path('historydata', views.DeviceHistorydatalistView.as_view()),
+    path('alarmdata', views.DeviceAlarmdatalistView.as_view()),
 ]
