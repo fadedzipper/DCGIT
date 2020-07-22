@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.User
-        fields = ['id','name','num','username','email','phone','gender',\
+        fields = ['id','name','num','username','email','number','gender',\
                 'info','last_login','is_active','date_joined','password']
 
         extra_kwargs = {
@@ -56,8 +56,8 @@ class UserUpdateSerializer(UserSerializer):
     gender = serializers.IntegerField()
     class Meta:
         model = models.User
-        fields = ['id','name','num','username','email','phone','gender', \
-                  'info','is_active']
+        fields = ['id','name','num','username','email','number','gender', \
+                  'info','is_active', 'password']
 
 
 

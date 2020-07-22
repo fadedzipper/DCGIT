@@ -99,7 +99,7 @@ class  DeviceConfSerialzer(serializers.ModelSerializer):
         return  object
 
 
-class DevicelistallSerializer(serializers.ModelSerializer):
+class   DevicelistallSerializer(serializers.ModelSerializer):
 
     grid = serializers.StringRelatedField(many=False)
     class Meta:
@@ -114,7 +114,7 @@ class DevicelistallSerializer(serializers.ModelSerializer):
         #         return "离线"
         #     return "在线"
 
-class DeviceSerializer(serializers.ModelSerializer):
+class   DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Device
         fields = ['id', 'serial', 'name', 'is_register', 'is_online', 'is_bind', 'is_enable']
@@ -133,12 +133,10 @@ class Device_enableSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Device
         fields = ['id', 'is_enable']
-        extra_kwargs = {
-            'is_enable' : {'read_only', True}
-        }
+        read_only_fields = ['is_enable']
     def update(self, instance, validated_data):
         object = super().update(instance, validated_data)
-        object.is_enable = True
+        object.is_enable = 1
         object.save()
         return object
 
@@ -147,9 +145,7 @@ class Device_unableSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Device
         fields = ['id', 'is_enable']
-        extra_kwargs = {
-            'is_enable' : {'read_only', True}
-        }
+        read_only_fields = ['is_enable']
     def update(self, instance, validated_data):
         object = super().update(instance, validated_data)
         object.is_enable = False
@@ -163,9 +159,7 @@ class Device_bindSerializer(serializers.ModelSerializer):
         model = models.Device
         fields = ['id', 'is_bind', 'grid']
 
-        extra_kwargs = {
-            'is_bind' : {'read_only', True}
-        }
+        read_only_fields = ['is_bind']
     def update(self, instance, validated_data):
         object = super().update(instance, validated_data)
         object.is_bind = True
@@ -180,13 +174,11 @@ class Device_disbindSerializer(serializers.ModelSerializer):
         model = models.Device
         fields = ['id', 'is_bind', 'grid']
 
-        extra_kwargs = {
-            'is_bind' : {'read_only', True}
-        }
+        read_only_fields = ['is_bind']
 
     def update(self, instance, validated_data):
         object = super().update(instance, validated_data)
         object.is_bind = False
-        object.grid = validated_data['grid']
+        object.grid = None
         object.save()
         return object

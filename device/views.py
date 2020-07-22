@@ -4,7 +4,7 @@ from device import models,serializers
 from django.shortcuts import get_object_or_404
 # Create your views here.
 
-class DeviceView(generics.CreateAPIView):
+class DevicePostView(generics.CreateAPIView):
     """
     新增设备
 
@@ -118,4 +118,73 @@ class DeviceConfView(generics.UpdateAPIView):
  #  devices/1/conf  put
 
 
+class DevicebindView(generics.UpdateAPIView):
 
+    queryset = models.Device.objects.all()
+    serializer_class = serializers.Device_bindSerializer
+
+    def get_object(self):
+        id = self.kwargs['pk']     # id  ==> pkv  { 'pk':1}
+        object = get_object_or_404(models.Device,id=id)
+        return object
+
+
+class DevicedisbindView(generics.UpdateAPIView):
+
+    queryset = models.Device.objects.all()
+    serializer_class = serializers.Device_disbindSerializer
+
+    def get_object(self):
+        id = self.kwargs['pk']     # id  ==> pkv  { 'pk':1}
+        object = get_object_or_404(models.Device,id=id)
+        return object
+
+
+class DeviceEnableView(generics.UpdateAPIView):
+
+    queryset = models.Device.objects.all()
+    serializer_class = serializers.Device_enableSerializer
+
+    def get_object(self):
+        id = self.kwargs['pk']     # id  ==> pkv  { 'pk':1}
+        object = get_object_or_404(models.Device,id=id)
+        return object
+
+
+class DeviceUnableView(generics.UpdateAPIView):
+
+    queryset = models.Device.objects.all()
+    serializer_class = serializers.Device_unableSerializer
+
+    def get_object(self):
+        id = self.kwargs['pk']     # id  ==> pkv  { 'pk':1}
+        object = get_object_or_404(models.Device,id=id)
+        return object
+
+
+class DevicelistallView(generics.RetrieveAPIView):
+
+    queryset = models.Device.objects.all().order_by('id')
+    serializer_class = serializers.DevicelistallSerializer
+
+    def get_object(self):
+        id = self.kwargs['pk']
+        object = get_object_or_404(models.Device, id = id)
+        return object
+
+
+class DevicelistView(generics.ListAPIView):
+
+    queryset = models.Device.objects.all().order_by('id')
+    serializer_class = serializers.DeviceSerializer
+
+
+class DeviceupdateView(generics.UpdateAPIView):
+
+    queryset = models.Device.objects.all().order_by('id')
+    serializer_class = serializers.DeviceUpdateSerializer
+
+    def get_object(self):
+        id = self.kwargs['pk']
+        object = get_object_or_404(models.Device, id = id)
+        return object
