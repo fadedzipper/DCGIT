@@ -54,7 +54,6 @@ class UserSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(UserSerializer):
 
     gender = serializers.IntegerField()
-    birth = serializers.DateTimeField(format("%Y-%m-%d"),input_formats=["%Y-%m-%d", ])
     class Meta:
         model = models.User
         fields = ['id','name','num','username','email','phone','gender', \

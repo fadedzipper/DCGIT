@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'group',
     'permission',
     'device',
-    'report'
+    'report',
+    'grid'
 
 ]
 
