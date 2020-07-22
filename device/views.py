@@ -1,8 +1,22 @@
 from django.shortcuts import render
+from rest_framework import status
 from rest_framework import generics
 from device import models,serializers
 from django.shortcuts import get_object_or_404
-# Create your views here.
+from rest_framework.pagination import PageNumberPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+from django_filters import FilterSet
+from rest_framework.response import Response
+
+
+class MyPagination(PageNumberPagination):
+
+    page_size = 10
+    page_size_query_param = 'page_size'
+    page_query_param = "page"
+    max_page_size = 100
+
 
 class DevicePostView(generics.CreateAPIView):
     """
@@ -118,40 +132,7 @@ class DeviceConfView(generics.UpdateAPIView):
  #  devices/1/conf  put
 
 
-class DevicebindView(generics.UpdateAPIView):
-
-    queryset = models.Device.objects.all()
-    serializer_class = serializers.Device_bindSerializer
-
-    def get_object(self):
-        id = self.kwargs['pk']     # id  ==> pkv  { 'pk':1}
-        object = get_object_or_404(models.Device,id=id)
-        return object
-
-
-class DevicedisbindView(generics.UpdateAPIView):
-
-    queryset = models.Device.objects.all()
-    serializer_class = serializers.Device_disbindSerializer
-
-    def get_object(self):
-        id = self.kwargs['pk']     # id  ==> pkv  { 'pk':1}
-        object = get_object_or_404(models.Device,id=id)
-        return object
-
-
-class DeviceEnableView(generics.UpdateAPIView):
-
-    queryset = models.Device.objects.all()
-    serializer_class = serializers.Device_enableSerializer
-
-    def get_object(self):
-        id = self.kwargs['pk']     # id  ==> pkv  { 'pk':1}
-        object = get_object_or_404(models.Device,id=id)
-        return object
-
-
-class DeviceUnableView(generics.UpdateAPIView):
+class DeviceUnableView(generics.DestroyAPIView):
 
     queryset = models.Device.objects.all()
     serializer_class = serializers.Device_unableSerializer
@@ -161,22 +142,23 @@ class DeviceUnableView(generics.UpdateAPIView):
         object = get_object_or_404(models.Device,id=id)
         return object
 
+    def destroy(self, request, *args, **kwargs):
 
-class DevicelistallView(generics.RetrieveAPIView):
+        device = self.get_object()
+        device.is_enable = 0
+        device.save()
 
-    queryset = models.Device.objects.all().order_by('id')
-    serializer_class = serializers.DevicelistallSerializer
-
-    def get_object(self):
-        id = self.kwargs['pk']
-        object = get_object_or_404(models.Device, id = id)
-        return object
+        return  Response({'msg':"冻结成功","code":200},status=status.HTTP_200_OK)
 
 
 class DevicelistView(generics.ListAPIView):
 
+    pagination_class = MyPagination
     queryset = models.Device.objects.all().order_by('id')
     serializer_class = serializers.DeviceSerializer
+    filter_backends = (DjangoFilterBackend,filters.SearchFilter)
+    # filterset_fields = ('gender', 'is_active')
+    search_fields = ('serial', 'name')
 
 
 class DeviceupdateView(generics.UpdateAPIView):

@@ -65,9 +65,19 @@ class DeleteGridView(DestroyAPIView):
     queryset = Grid.objects.all()
 '''
 
+class MyPagination(PageNumberPagination):
+
+    page_size = 10
+    page_size_query_param = 'page_size'
+    page_query_param = "page"
+    max_page_size = 100
+
+
+
 #全家桶
 class GridModeViewSet(viewsets.ModelViewSet):
     serializer_class = GridSerizalizer
+    pagination_class = MyPagination
     queryset = Grid.objects.all().order_by('id')
     filter_backends = [DjangoFilterBackend,filters.SearchFilter]
     filterset_fields = ('id','name','location','leader','telephone')

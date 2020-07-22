@@ -99,25 +99,13 @@ class  DeviceConfSerialzer(serializers.ModelSerializer):
         return  object
 
 
-class   DevicelistallSerializer(serializers.ModelSerializer):
+class   DeviceSerializer(serializers.ModelSerializer):
 
     grid = serializers.StringRelatedField(many=False)
+
     class Meta:
         model = models.Device
-        fields = ['id','mac', \
-                  'x_index', 'y_index', 'info', 'grid', 'register_time', \
-                  'active_time', 'last_login_time', 'last_logout_time', 'grid']
-
-
-        # def get_obj(self, obj):
-        #     if obj.is_active == 0:
-        #         return "离线"
-        #     return "在线"
-
-class   DeviceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Device
-        fields = ['id', 'serial', 'name', 'is_register', 'is_online', 'is_bind', 'is_enable']
+        fields = ['id', 'serial', 'name', 'is_register', 'is_online', 'is_bind', 'is_enable', 'id','mac', 'x_index', 'y_index', 'info', 'grid', 'register_time', 'active_time', 'last_login_time', 'last_logout_time', 'grid']
 
 
 
@@ -126,7 +114,7 @@ class DeviceUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Device
-        fields = ['id', 'name', 'x_index', 'y_index', 'info']
+        fields = ['id', 'name', 'x_index', 'y_index', 'info', 'is_enable', 'is_bind', 'grid']
 
 
 class Device_enableSerializer(serializers.ModelSerializer):
