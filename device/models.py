@@ -27,6 +27,9 @@ class Device(models.Model):
     grid = models.ForeignKey(Grid, null=True, blank=True, on_delete=models.SET_NULL)
     # ...
 
+    def __str__(self):
+        return str(self.serial)
+
 
 class DeviceSecret(models.Model):
     dev_passwd = models.CharField(default='',max_length=100,verbose_name="设备秘钥")
@@ -94,6 +97,9 @@ class DeviceHistoryData(models.Model):
 
 class AlarmType(models.Model):
     name = models.CharField(default="",max_length=100,verbose_name="设备报警类型")
+
+    def __str__(self):
+        return str(self.name)
 
 
 class AlarmData(models.Model):

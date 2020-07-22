@@ -137,9 +137,14 @@ class DeviceconflistSerializer(serializers.ModelSerializer):
 
 
 class DevicealarmlistSerializer(serializers.ModelSerializer):
+
+    device = serializers.StringRelatedField()
+    alarmtype = serializers.StringRelatedField()
+    user = serializers.StringRelatedField()
+
     class Meta:
         model = models.AlarmData
-        fields = '__all__'
+        fields = ['device', 'alarmtype', 'value', 'time', 'status', 'dealwith_time', 'user']
 
 class DevicerealdatalistSerializer(serializers.ModelSerializer):
     class Meta:
