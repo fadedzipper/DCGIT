@@ -116,6 +116,16 @@ class DeviceUpdateSerializer(serializers.ModelSerializer):
         model = models.Device
         fields = ['id', 'name', 'x_index', 'y_index', 'info', 'is_enable', 'is_bind', 'grid']
 
+    # def update(self, instance, validated_data):
+    #     if object.is_bind == 1:
+    #         object = super().update(instance, validated_data)
+    #         object.save()
+    #
+    #     else:
+    #         object.is_bind = 0
+    #         object.save()
+    #
+    #     return object
 
 
 class Device_unableSerializer(serializers.ModelSerializer):
@@ -145,6 +155,19 @@ class DevicealarmlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.AlarmData
         fields = ['device', 'alarmtype', 'value', 'time', 'status', 'dealwith_time', 'user']
+
+class DevicealarmupdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AlarmData
+        fields = ['id', 'status', 'dealwith_time']
+        read_only_fields = ['status']
+    def update(self, instance, validated_data):
+        object = super().update(instance, validated_data)
+        object.status = True
+        object.dealwith_time = datetime.datetime.now()
+        object.save()
+        return object
+
 
 class DevicerealdatalistSerializer(serializers.ModelSerializer):
     class Meta:

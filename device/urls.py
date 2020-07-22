@@ -10,4 +10,5 @@ urlpatterns = [
     path('realdata', views.DeviceRealdatalistView.as_view()),
     path('historydata', views.DeviceHistorydatalistView.as_view()),
     path('alarmdata', views.DeviceAlarmdatalistView.as_view()),
+    path('<int:pk>/alarmhandle', views.DeviceAlarmdataupdateView.as_view())
 ]

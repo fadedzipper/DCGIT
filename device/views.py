@@ -1,8 +1,11 @@
 from django.shortcuts import render
-from rest_framework import status
-from rest_framework import generics
+from django.db.models import Avg
+from device.utils import getAQI
+from rest_framework import generics,views,status
 from device import models,serializers
+import datetime
 from django.shortcuts import get_object_or_404
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
@@ -193,7 +196,27 @@ class DeviceAlarmdatalistView(generics.ListAPIView):
     serializer_class = serializers.DevicealarmlistSerializer
     filter_backends = (DjangoFilterBackend,filters.SearchFilter)
     # filterset_fields = ('gender', 'is_active')
-    # search_fields = ('serial', 'name')
+    search_fields = ('device',)
+
+
+class DeviceAlarmdataupdateView(generics.DestroyAPIView):
+
+    queryset = models.Device.objects.all().order_by('id')
+    serializer_class = serializers.DevicealarmupdateSerializer
+
+    def get_object(self):
+        id = self.kwargs['pk']
+        object = get_object_or_404(models.AlarmData, id = id)
+        return object
+
+    def destroy(self, request, *args, **kwargs):
+
+        alarm = self.get_object()
+        alarm.status = 1
+        alarm.dealwith_time = datetime.datetime.now()
+        alarm.save()
+
+        return  Response({'msg':"处理成功","code":200},status=status.HTTP_200_OK)
 
 
 class DeviceRealdatalistView(generics.ListAPIView):
@@ -209,8 +232,61 @@ class DeviceRealdatalistView(generics.ListAPIView):
 class DeviceHistorydatalistView(generics.ListAPIView):
 
     pagination_class = MyPagination
-    queryset = models.DeviceHistoryData.objects.all().order_by('id')
+    queryset = models.DeviceHistoryData.objects.all().order_by('-id')
     serializer_class = serializers.DevicehistorydatalistSerializer
-    filter_backends = (DjangoFilterBackend,filters.SearchFilter)
-    # filterset_fields = ('gender', 'is_active')
+    # filter_backends = (DjangoFilterBackend,filters.SearchFilter)
+    filterset_fields = ('device', )
     # search_fields = ('serial', 'name')
+
+    # def list(self, request, *args, **kwargs):
+    #
+    #     dev_id = models.DeviceHistoryData.device.get(serial=)
+
+
+
+class GetAQIView(views.APIView):
+
+    def get(self,request,*args,**kwargs):
+        # 获取一小时的数据
+        end_time = datetime.datetime.now()
+        start_time = datetime.datetime.now()-datetime.timedelta(hours=1)
+        # time__gte=start_time  因为我的数据库里近一小时没数据,,开始时间的条件我这里我先去掉了,,大家有数据的话加上
+        data = models.DeviceHistoryData.objects.filter(time__lte=end_time) \
+            .values('device_id').annotate(PM25=Avg('PM25'),PM10=Avg('PM10'),SO2=Avg('SO2'),NO2=Avg('NO2'),CO=Avg('CO'),O3=Avg('O3')) \
+            .values('device_id','PM25','PM10','SO2','NO2','CO','O3')
+
+        # print(data)
+        # [{"device_id":"","PM25":234...},{} ]
+
+
+        # 计算API
+        for d in data:
+            print(d)
+            d["IAQIPM25"] = getAQI(d["PM25"],"PM25")
+            d["IAQIPM10"] = getAQI(d["PM10"], "PM10")
+            d["IAQISO2"] = getAQI(d["SO2"], "SO2")
+            d["IAQINO2"] = getAQI(d["NO2"], "NO2")
+            d["IAQICO"] = getAQI(d["CO"], "CO")
+            d["IAQIO3"] = getAQI(d["O3"], "O3")
+
+            # 计算最大AQI
+            AQIlist =[d["IAQIPM25"],d["IAQIPM10"],d["IAQISO2"],d["IAQINO2"],d["IAQICO"],d["IAQIO3"]]
+            index = AQIlist.index(max(AQIlist))
+            d["AQI"] = AQIlist[index]
+
+            # 添加描述
+            type_list = ['PM25','PM10','SO2','NO2','CO','O3']
+            d['desc'] = "{} 为主要污染物。".format(type_list[index])
+
+
+        # 计算排名 默认从小到大,  reverse=True 从大到小
+        data = sorted(data, key=lambda d: d['AQI'])
+        for i in range(0,len(data)):
+            data[i]["rank"] = i+1
+
+        return Response(data={'msg': "请求成功", "code": 200, "data": data}, status=status.HTTP_200_OK)
+
+
+# class AlarmViewSet(ModelViewSet):
+#     serializer_class = AlarmDataSerialzer
+#     queryset = AlarmData.objects.all().order_by('id')
