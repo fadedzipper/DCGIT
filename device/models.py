@@ -21,8 +21,8 @@ class Device(models.Model):
     # 设备描述
     name = models.CharField(default='', null=True, max_length=100, verbose_name="设备名称")
     info = models.CharField(default='', null=True, max_length=100, verbose_name="设备描述")
-    x_index = models.CharField(default="",null=True,verbose_name="位置",max_length=50)
-    y_index = models.CharField(default="",null=True,verbose_name="位置",max_length=50)
+    x_index = models.FloatField(default=0.0, null = True)
+    y_index = models.FloatField(default=0.0, null = True)
     is_bind = models.BooleanField(default=False,null=True,verbose_name="设备是否绑定到网格")
     grid = models.ForeignKey(Grid, null=True, blank=True, on_delete=models.SET_NULL)
     # ...
