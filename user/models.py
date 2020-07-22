@@ -20,7 +20,7 @@ class User(AbstractUser):
     # is_active
     # date_joined
 
-    number = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20)
     num = models.CharField(max_length=20)
     gender = models.IntegerField(default=1)
     info = models.CharField(max_length=100)

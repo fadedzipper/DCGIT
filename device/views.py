@@ -64,6 +64,10 @@ class DevicePostView(generics.CreateAPIView):
     serializer_class = serializers.CreateDeviceSerialzer
 
 
+class DevicePostConfView(generics.CreateAPIView):
+    pass
+
+
 class DeviceConfView(generics.UpdateAPIView):
     """
     修改设备配置
