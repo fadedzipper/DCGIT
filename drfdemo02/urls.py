@@ -53,6 +53,7 @@ urlpatterns = [
     path('login', LoginView.as_view(), name='login'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('reports/', include('report.urls')),
-    path('grids/', include('grid.urls'))
+    path('grids/', include('grid.urls')),
+    path('logs/', include('log.urls'))
 
 ]

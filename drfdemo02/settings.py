@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'permission',
     'device',
     'report',
-    'grid'
+    'grid',
+    'log'
 
 ]
 
