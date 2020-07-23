@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ['id','name','num','username','email','phone','gender', \
-                'info','last_login','is_active','date_joined','password']
+                'info','last_login','is_active','date_joined','password', 'is_superuser']
 
         extra_kwargs = {
             'last_login':{'read_only':True,"required":False},

@@ -187,8 +187,8 @@ REST_FRAMEWORK = {
     ),
     # 设置全局权限检测类(项目一开始不需要添加权限，为方便测试，先注释掉了)
     # "DEFAULT_PERMISSION_CLASSES": (
-    #     #    "rest_framework.permissions.IsAuthenticated",  # 判断是否登陆
-    #     # ),
+    #        "rest_framework.permissions.IsAuthenticated",  # 判断是否登陆
+    #     ),
 
     # 渲染类 （为保持接口返回统一，重写了DRF渲染类）
     "DEFAULT_RENDERER_CLASSES": (

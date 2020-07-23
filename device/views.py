@@ -11,6 +11,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from django_filters import FilterSet
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
 
 
 class MyPagination(PageNumberPagination):
@@ -290,3 +291,160 @@ class GetAQIView(views.APIView):
 # class AlarmViewSet(ModelViewSet):
 #     serializer_class = AlarmDataSerialzer
 #     queryset = AlarmData.objects.all().order_by('id')
+
+
+
+
+
+
+# 获取某个设备的实时数据：
+class GetCurrentDataView(views.APIView):
+
+    # /devices/2/current
+    def get(self,request,*args,**kwargs):
+        device_id = kwargs['pk']
+        res = models.DeviceData.objects.filter(device_id=device_id).values()
+        return Response(data={'msg': "请求成功", "code": 200, "data": res}, status=status.HTTP_200_OK)
+
+
+# 获取某个设备的历史数据：
+class GetHistorytDataView(views.APIView):
+
+    # /devices/2/current
+    def get(self,request,*args,**kwargs):
+        device_id = kwargs['pk']
+        res = models.DeviceHistoryData.objects.filter(device_id=device_id).values()
+        return Response(data={'msg': "请求成功", "code": 200, "data": res}, status=status.HTTP_200_OK)
+
+
+
+class GetAQIView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        end_time = datetime.datetime.now()
+        start_time = datetime.datetime.now() - datetime.timedelta(hours=24)
+        data = models.DeviceHistoryData.objects.filter(time__lte=end_time) \
+            .values('device_id').annotate(PM25=Avg('PM25'), PM10=Avg('PM10'), SO2=Avg('SO2'), NO2=Avg('NO2'),
+                                          CO=Avg('CO'), O3=Avg('O3')) \
+            .values('device_id', 'PM25', 'PM10', 'SO2', 'NO2', 'CO', 'O3')
+        data = data.filter(device_id=1)
+        for d in data:
+            d["IAQIPM25"] = getAQI(d["PM25"], "PM25")
+            d["IAQIPM10"] = getAQI(d["PM10"], "PM10")
+            d["IAQISO2"] = getAQI(d["SO2"], "SO2")
+            d["IAQINO2"] = getAQI(d["NO2"], "NO2")
+            d["IAQICO"] = getAQI(d["CO"], "CO")
+            d["IAQIO3"] = getAQI(d["O3"], "O3")
+
+         #均值存入AQIavglist
+            AQIavglist = [d["PM25"],d["PM10"],d["SO2"],d["NO2"],d["CO"],d["O3"]]
+
+        # 计算平均AQI
+            AQIlist =[d["IAQIPM25"],d["IAQIPM10"],d["IAQISO2"],d["IAQINO2"],d["IAQICO"],d["IAQIO3"]]
+        type_list = ['PM25', 'PM10', 'SO2', 'NO2', 'CO', 'O3']
+        type_key =[1,2,3,4,5,6]
+        ranking = 1
+        dicttype = dict(zip(type_key,AQIlist))
+        listkey = ["ranking", "datatype", "AQI", "AvgAQI"]
+        dictres = []
+
+
+        for k in sorted(dicttype.items(), key=lambda item:item[1], reverse=True):
+            listvalue = []
+            listvalue.append(ranking)
+            ranking = ranking+1
+            listvalue.append(type_list[k[0]-1])
+            listvalue.append(k[1])
+            listvalue.append(AQIavglist[k[0]-1])
+            dicttemp = dict(zip(listkey,listvalue))
+            dictres.append(dicttemp)
+
+        return Response(data={'msg': "请求成功", "code": 200, "data": dictres}, status=status.HTTP_200_OK)
+
+
+
+
+
+
+#获得上海地区的AQI
+class GetAllAQIView(views.APIView):
+
+    def get(self, request, *args, **kwargs):
+        device_city = "上海"
+        end_time = datetime.datetime.now()
+        start_time = datetime.datetime.now() - datetime.timedelta(hours=24)
+        #获取一小时的数据
+        #获取上海的设备号
+        avgAQIPM25 = 0
+        device_id = models.Device.objects.filter(city=device_city)
+        data1 = []
+        for i in device_id:
+            data = models.DeviceHistoryData.objects.filter(device_id=i.id,time__gte=start_time,\
+                                                       time__lte=end_time)\
+            .values('device_id').annotate(PM25=Avg('PM25')).values('device_id','PM25')
+            data1.append(data)
+        print(data1)
+
+
+        for d in data1:
+            for g in d:
+                g["AQIPM25"] = getAQI(g["PM25"], "PM25")
+                avgAQIPM25 = avgAQIPM25+g["AQIPM25"]
+                print(g,avgAQIPM25)
+
+        avgAQIPM25 = avgAQIPM25/len(data1)
+        datakey = ["name","value"]
+        datavalue = ["上海",avgAQIPM25]
+        datareturn = dict(zip(datakey,datavalue))
+
+        return Response(data={'msg': "请求成功", "code": 200, "data": datareturn}, status=status.HTTP_200_OK)
+
+
+
+#PM2.5,PM10,温度
+class GetPM25HistoryView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        device_id = 1
+        datafield = "PM25"
+        query = models.DeviceHistoryData.objects.filter(device_id=device_id)
+        length = query.count()
+        res = query.values(datafield)[length-10::1]
+        listres = []
+        for d in res:
+            listres.append(d[datafield])
+        return Response(data={'msg': "请求成功", "code": 200, "data": listres}, status=status.HTTP_200_OK)
+
+class GetPM10HistoryView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        device_id = 1
+        datafield = "PM10"
+        query = models.DeviceHistoryData.objects.filter(device_id=device_id)
+        length = query.count()
+        res = query.values(datafield)[length-10::1]
+        listres = []
+        for d in res:
+            listres.append(d[datafield])
+        return Response(data={'msg': "请求成功", "code": 200, "data": listres}, status=status.HTTP_200_OK)
+
+class GetTempHistoryView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        device_id = 1
+        datafield = "Temperature"
+        query = models.DeviceHistoryData.objects.filter(device_id=device_id)
+        length = query.count()
+        res = query.values(datafield)[length-10::1]
+        listres = []
+        for d in res:
+            listres.append(d[datafield])
+        return Response(data={'msg': "请求成功", "code": 200, "data": listres}, status=status.HTTP_200_OK)
+
+class GetCO2HistoryView(views.APIView):
+    def get(self, request, *args, **kwargs):
+        device_id = 1
+        datafield = "CO2"
+        query = models.DeviceHistoryData.objects.filter(device_id=device_id)
+        length = query.count()
+        res = query.values(datafield)[length-10::1]
+        listres = []
+        for d in res:
+            listres.append(d[datafield])
+        return Response(data={'msg': "请求成功", "code": 200, "data": listres}, status=status.HTTP_200_OK)

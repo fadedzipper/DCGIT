@@ -29,7 +29,14 @@ class User(AbstractUser):
     class Meta:
         permissions = (
             ('user_management','用户管理'),
-            ('group_management','角色管理')
+            ('group_management','角色管理'),
+            ('permission_management','权限管理'),
+            ('alarm_management', '报警管理'),
+            ('report_management', '举报管理'),
+            ('log_management', '日志管理'),
+            ('grid_management', '网格管理'),
+            ('device_management', '设备管理'),
+            ('', ''),
         )
 
 

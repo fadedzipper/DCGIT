@@ -24,6 +24,7 @@ class Device(models.Model):
     x_index = models.FloatField(default=0.0, null = True)
     y_index = models.FloatField(default=0.0, null = True)
     is_bind = models.BooleanField(default=False,null=True,verbose_name="设备是否绑定到网格")
+    city = models.CharField(default='', null=True, max_length=40, verbose_name="设备所在城市")
     grid = models.ForeignKey(Grid, null=True, blank=True, on_delete=models.SET_NULL)
     # ...
 

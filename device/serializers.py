@@ -22,7 +22,7 @@ class CreateDeviceSerialzer(serializers.ModelSerializer):
         model = models.Device
         fields = ['mac','serial','dev_passwd',
                   'name','info','x_index','y_index',
-                  'is_enable','is_online','is_register'] # ...
+                  'is_enable','is_online','is_register', 'city'] # ...
 
         extra_kwargs = {
             'is_enable':{'read_only':True,'required':False},
@@ -105,7 +105,7 @@ class   DeviceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Device
-        fields = ['id', 'serial', 'name', 'is_register', 'is_online', 'is_bind', 'is_enable', 'id','mac', 'x_index', 'y_index', 'info', 'grid', 'register_time', 'active_time', 'last_login_time', 'last_logout_time', 'grid']
+        fields = ['id', 'serial', 'name', 'is_register', 'is_online', 'is_bind', 'is_enable', 'id','mac', 'x_index', 'y_index', 'info', 'grid', 'register_time', 'active_time', 'last_login_time', 'last_logout_time', 'grid', 'city']
 
 
 
@@ -114,7 +114,7 @@ class DeviceUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Device
-        fields = ['id', 'name', 'x_index', 'y_index', 'info', 'is_enable', 'is_bind', 'grid']
+        fields = ['id', 'name', 'x_index', 'y_index', 'info', 'is_enable', 'is_bind', 'grid', 'city']
 
     # def update(self, instance, validated_data):
     #     if object.is_bind == 1:
@@ -179,3 +179,9 @@ class DevicehistorydatalistSerializer(serializers.ModelSerializer):
         model = models.DeviceHistoryData
         fields = '__all__'
 
+# 高艺的序列化器
+class DeviceHistoryDataSerialzer(serializers.Serializer):
+
+    datafield = serializers.CharField(max_length=10)
+    start_time = serializers.DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S", ], required=False)
+    end_time = serializers.DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S", ], required=False)
