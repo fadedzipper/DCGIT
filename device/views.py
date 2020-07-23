@@ -12,6 +12,7 @@ from rest_framework import filters
 from django_filters import FilterSet
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
+from permission import permissions
 
 
 class MyPagination(PageNumberPagination):
@@ -64,12 +65,10 @@ class DevicePostView(generics.CreateAPIView):
     | 400 | 参数错误 | 参数错误 |
     | 500 | 请求失败 | 服务器内部错误 |
     """
+    permission_classes = (permissions.ModelPermission,)
     queryset = models.Device.objects.all()
     serializer_class = serializers.CreateDeviceSerialzer
 
-
-class DevicePostConfView(generics.CreateAPIView):
-    pass
 
 
 class DeviceConfView(generics.UpdateAPIView):
@@ -128,6 +127,7 @@ class DeviceConfView(generics.UpdateAPIView):
     | 503 | 无法连接采集服务器 | 发送命令失败 |
     """
 
+    permission_classes = (permissions.ModelPermission,)
     queryset = models.DeviceConf.objects.all()
     serializer_class = serializers.DeviceConfSerialzer
 
@@ -142,6 +142,7 @@ class DeviceConfView(generics.UpdateAPIView):
 
 class DeviceUnableView(generics.DestroyAPIView):
 
+    permission_classes = (permissions.ModelPermission,)
     queryset = models.Device.objects.all()
     serializer_class = serializers.Device_unableSerializer
 
@@ -162,6 +163,7 @@ class DeviceUnableView(generics.DestroyAPIView):
 class DevicelistView(generics.ListAPIView):
 
     pagination_class = MyPagination
+    permission_classes = (permissions.ModelPermission,)
     queryset = models.Device.objects.all().order_by('id')
     serializer_class = serializers.DeviceSerializer
     filter_backends = (DjangoFilterBackend,filters.SearchFilter)
@@ -172,6 +174,7 @@ class DevicelistView(generics.ListAPIView):
 class DeviceupdateView(generics.UpdateAPIView):
 
     queryset = models.Device.objects.all().order_by('id')
+    permission_classes = (permissions.ModelPermission,)
     serializer_class = serializers.DeviceUpdateSerializer
 
     def get_object(self):
@@ -183,6 +186,7 @@ class DeviceupdateView(generics.UpdateAPIView):
 class DeviceConflistView(generics.ListAPIView):
 
     pagination_class = MyPagination
+    permission_classes = (permissions.ModelPermission,)
     queryset = models.DeviceConf.objects.all().order_by('id')
     serializer_class = serializers.DeviceconflistSerializer
     filter_backends = (DjangoFilterBackend,filters.SearchFilter)
@@ -193,6 +197,7 @@ class DeviceConflistView(generics.ListAPIView):
 class DeviceAlarmdatalistView(generics.ListAPIView):
 
     pagination_class = MyPagination
+    permission_classes = (permissions.ModelPermission,)
     queryset = models.AlarmData.objects.all().order_by('-id')
     serializer_class = serializers.DevicealarmlistSerializer
     filter_backends = (DjangoFilterBackend,filters.SearchFilter)
@@ -203,6 +208,7 @@ class DeviceAlarmdatalistView(generics.ListAPIView):
 class DeviceAlarmdataupdateView(generics.DestroyAPIView):
 
     queryset = models.Device.objects.all().order_by('id')
+    permission_classes = (permissions.ModelPermission,)
     serializer_class = serializers.DevicealarmupdateSerializer
 
     def get_object(self):

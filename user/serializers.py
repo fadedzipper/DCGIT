@@ -78,9 +78,7 @@ class LoginSerializer(TokenObtainPairSerializer):
         user = self.user
         data['id'] = user.id
         data['username'] = user.username
-        data['last_name'] = user.last_name
-        data['perms'] = user.get_all_permissions()
-        data['group'] = user.groups.all().values('id','name')
+        data['is_superuser'] = user.is_superuser
 
         return data
 

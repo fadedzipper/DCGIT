@@ -6,6 +6,7 @@ from rest_framework.pagination import  PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 # Create your views here.
+from permission import permissions
 
 
 class SelfPagination(PageNumberPagination):
@@ -15,6 +16,8 @@ class SelfPagination(PageNumberPagination):
     max_page_size = 100
 
 class SyslogView(ModelViewSet):
+
+    permission_classes = (permissions.ModelPermission,)
     serializer_class = LogSerializer
     pagination_class = SelfPagination
     queryset = SysLog.objects.all().order_by("log_id")

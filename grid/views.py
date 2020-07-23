@@ -23,6 +23,7 @@ from rest_framework import status
 
 from rest_framework import generics,viewsets,filters
 from django.shortcuts import get_object_or_404
+from permission import permissions
 
 # Create your views here.
 
@@ -76,6 +77,8 @@ class MyPagination(PageNumberPagination):
 
 #全家桶
 class GridModeViewSet(viewsets.ModelViewSet):
+
+    permission_classes = (permissions.ModelPermission,)
     serializer_class = GridSerizalizer
     pagination_class = MyPagination
     queryset = Grid.objects.all().order_by('id')

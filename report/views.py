@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework_simplejwt.views import TokenObtainPairView
+from permission import permissions
 
 
 class MyPagination(PageNumberPagination):
@@ -22,6 +23,7 @@ class MyPagination(PageNumberPagination):
 
 class ReportViewSet(viewsets.ModelViewSet):
 
+    permission_classes = (permissions.ModelPermission,)
     pagination_class = MyPagination
     # serializer_class = serializers.ReportSerializer
     queryset = models.Report.objects.all().order_by('id')
