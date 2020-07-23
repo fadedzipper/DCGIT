@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ['id','name','num','username','email','phone','gender', \
-                'info','last_login','is_active','date_joined','password', 'is_superuser']
+                'info','last_login','is_active','date_joined','password']
 
         extra_kwargs = {
             'last_login':{'read_only':True,"required":False},
@@ -78,6 +78,7 @@ class LoginSerializer(TokenObtainPairSerializer):
         user = self.user
         data['id'] = user.id
         data['username'] = user.username
+        data['perms'] = user.get_all_permissions()
         data['is_superuser'] = user.is_superuser
 
         return data
