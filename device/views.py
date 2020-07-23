@@ -192,7 +192,7 @@ class DeviceConflistView(generics.ListAPIView):
 class DeviceAlarmdatalistView(generics.ListAPIView):
 
     pagination_class = MyPagination
-    queryset = models.AlarmData.objects.all().order_by('id')
+    queryset = models.AlarmData.objects.all().order_by('-id')
     serializer_class = serializers.DevicealarmlistSerializer
     filter_backends = (DjangoFilterBackend,filters.SearchFilter)
     # filterset_fields = ('gender', 'is_active')

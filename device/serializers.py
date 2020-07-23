@@ -154,7 +154,7 @@ class DevicealarmlistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.AlarmData
-        fields = ['device', 'alarmtype', 'value', 'time', 'status', 'dealwith_time', 'user']
+        fields = ['id', 'device', 'alarmtype', 'value', 'time', 'status', 'dealwith_time', 'user']
 
 class DevicealarmupdateSerializer(serializers.ModelSerializer):
     class Meta:
